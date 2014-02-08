@@ -1,0 +1,4 @@
+bitminer
+========
+
+bitcoin-miner
