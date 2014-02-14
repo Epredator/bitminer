@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Kalkulator</title>
+<style>
+form { width: 35% }
+form div { border: 1px black solid; font-family: Consolas, monospace; font-size: x-large; text-align: right }
+form input { width: 24.9%; font-size: large }
+</style>
+</head>
+<body>
+<script src="jquery-1.10.2.min.js"></script>
+<script src="ajaxq.js"></script>
+<script>
+formularz = jQuery('<form></form>');
+formularz.append('<div>&nbsp;</div>');
+
+przyciski = [['Nowy', 'CE', 'C'],
+             ['MS', 'MR', 'MC', 'M'],
+             ['7', '8', '9', '/'],
+             ['4', '5', '6', '*'],
+             ['1', '2', '3', '-'],
+             ['0', '.', '=', '+']];
+
+for (i = 0; i < przyciski.length; i++) {
+    for (j = 0; j < przyciski[i].length; j++) {
+        przycisk = jQuery('<input type="submit" name="przycisk" value="' + przyciski[i][j] + '">');
+
+        switch (przycisk.val()) {
+            case 'MS':
+                przycisk.on('click', function() {
+                    nazwa = prompt("Pod jaką nazwą zapisać?");
+                    if (nazwa) {
+                        jQuery.postq('kolejka', '/cgi-bin/kalkulator', 'pamiec=zapisz&' + jQuery.param({'nazwa': nazwa}), function(wartosc) {
+                            jQuery('form div').text(wartosc);
+                        });
+                    }
+                    return false;
+                });
+                break;
+            case 'MR':
+                przycisk.on('click', function() {
+                    nazwa = prompt("Nazwa zapisanej wartości:");
+                    if (nazwa) {
+                        jQuery.postq('kolejka', '/cgi-bin/kalkulator', 'pamiec=odczytaj&' + jQuery.param({'nazwa': nazwa}), function(wartosc) {
+                            jQuery('form div').text(wartosc);
+                        });
+                    }
+                    return false;
+                });
+                break;
+            case 'MC':
+                przycisk.on('click', function() {
+                    nazwa = prompt("Nazwa zapisanej wartości:");
+                    if (nazwa) {
+                        jQuery.postq('kolejka', '/cgi-bin/kalkulator', 'pamiec=usun&' + jQuery.param({'nazwa': nazwa}), function(wartosc) {
+                            jQuery('form div').text(wartosc);
+                        });
+                    }
+                    return false;
+                });
+                break;
+            case 'M':
+                przycisk.on('click', function() {
+                    jQuery.getq('kolejka', '/cgi-bin/kalkulator?pamiec', function(wartosc) {
+                        alert("Zawartość pamięci:\n" + wartosc);
+                    });
+                    return false;
+                });
+                break;
+            default:
+                przycisk.on('click', function() {
+                    jQuery.postq('kolejka', '/cgi-bin/kalkulator', jQuery.param({'przycisk': jQuery(this).val()}), function(wartosc) {
+                        jQuery('form div').text(wartosc);
+                    });
+                    return false;
+                });
+        }
+
+        formularz.append(przycisk);
+    }
+    formularz.append('<br>');
+}
+
+jQuery.getq('kolejka', '/cgi-bin/kalkulator', function(wartosc) {
+    jQuery('form div').text(wartosc);
+});
+jQuery('body').append(formularz);
+
+jQuery('html').on('keypress', function(zdarzenie) {
+    if (zdarzenie.ctrlKey || zdarzenie.altKey || zdarzenie.metaKey) {
+        return true;
+    }
+    
+    kod = zdarzenie.charCode;
+    if (!kod) {
+        kod = zdarzenie.keyCode;
+    }
+
+    if (kod == 13) {  // enter
+        nazwa_przycisku = "=";
+    } else {
+        nazwa_przycisku = String.fromCharCode(kod);
+    }
+
+    if (nazwa_przycisku == ",") {
+        nazwa_przycisku = ".";
+    }
+
+    przycisk = jQuery('form input[name="przycisk"][value="' + nazwa_przycisku + '"]');
+    if (przycisk.length > 0) {
+        przycisk[0].click();
+        return false;
+    }
+});
+
+jQuery(document).ajaxError(function() {
+    alert("Wystąpił błąd podczas komunikacji z serwerem.");
+    document.location.reload();
+});
+</script>
+<noscript>
+Ta aplikacja wymaga włączonej obsługi JavaScriptu w przeglądarce.
+</noscript>
+</body>
+</html>
