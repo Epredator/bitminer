@@ -1,5 +1,4 @@
 #!/usr/bin/env runhaskell
-
 import System.Environment
 import Data.List
 import Control.Monad
@@ -21,14 +20,13 @@ queryString :: IO String
 queryString = do
     getEnv "QUERY_STRING"
 
-
 main :: IO ()
 main = do
     putStrLn "Content-Type: text/html"
     putStrLn ""
 
     putStrLn "<!doctype html><html><head><meta charset='utf-8'/></head><body style='width: 600px; margin: auto; margin-top: 1cm;'><p>Wpisz tekst:</p>"
-    putStrLn "<form method='POST'><textarea name='tekst' rows='4' style='width: 100%;'></textarea><br/><input type='submit' value='Wyślij'/></form>"
+    putStrLn "<form method='POST'><textarea name='tekst' rows='4' style='width: 100%;'></textarea><br/><input type='submit' value='Wyslij'/></form>"
 
     qs <- queryString
     method <- requestMethod
@@ -40,3 +38,4 @@ main = do
     else return ()
 
     putStrLn "</body></html>"
+
