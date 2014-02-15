@@ -37,8 +37,16 @@ main = do
 
         putStrLn "<!doctype html><html><head><meta charset='utf-8'/>"
         putStrLn "<script src='http://code.jquery.com/jquery-1.10.2.min.js'></script>"
-        putStrLn "</head><body style='width: 600px; margin: auto; margin-top: 1cm;'><p>Wpisz tekst:</p>"
-        putStrLn "<form id='formularz' method='POST'><textarea name='tekst' rows='4' style='width: 100%;'></textarea><br/><input type='submit' value='Wysij'/></form>"
+        putStrLn "</head>"
+        putStrLn "<body style='width: 600px; margin: auto; margin-top: 1cm;'><p>Wpisz tekst:</p>"
+        putStrLn "<form id='formularz' method='POST'>"
+        putStrLn "Ciąg znaków, który jest prefixem dla wykopywanego stringa: <input type='text' name='prefix'>"
+        putStrLn "<br/>"
+        putStrLn "<br/>"
+        putStrLn "Ilość oczekiwanych zer:"
+        putStrLn "<br/>"
+        putStrLn "<input type='text' name='zeros'>"
+        putStrLn "<br/><input type='submit' value='Wysij'/></form>"
 
         qs <- queryString
         putStrLn ("<h4>Query string</h4><pre>" ++ qs ++ "</pre>")
