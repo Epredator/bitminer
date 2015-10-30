@@ -4,7 +4,7 @@ import System.IO --to change socket handle's buffering mode
 import Network --do nasluchiwania na porcie i akceptowania polaczen
 import Data.Time.LocalTime
 
---to spawn new Haskell threads (not used yet!)
+--to spawn new Haskell threads (not used yet!) drobne zmiany
 import Control.Concurrent (forkIO)
 
 data RequestType = GET | POST deriving (Show)
